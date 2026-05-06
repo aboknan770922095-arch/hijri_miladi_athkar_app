@@ -1,204 +1,505 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>التطبيق الإسلامي الأسطوري</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق نور الهداية - تجربة إسلامية رقمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* الألوان الأساسية - الوضع الداكن */
+            --bg-body: #0a192f;
+            --bg-card: rgba(16, 33, 65, 0.8);
+            --neon-blue: #00d2ff;
+            --neon-purple: #9d50bb;
+            --text-main: #e6f1ff;
+            --text-dim: #8892b0;
+            --accent: #64ffda;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-<style>
-body {
-    font-family: Arial;
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: white;
-    text-align: center;
-    padding: 15px;
-}
+        .light-mode {
+            --bg-body: #f0f4f8;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --neon-blue: #0077b6;
+            --neon-purple: #6a0572;
+            --text-main: #1a1a1a;
+            --text-dim: #4a4a4a;
+            --accent: #00b4d8;
+            --glass-border: rgba(0, 0, 0, 0.1);
+        }
 
-h1 {
-    color: #38bdf8;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.card {
-    background: #1e293b;
-    padding: 20px;
-    margin: 15px auto;
-    border-radius: 15px;
-    max-width: 420px;
-    box-shadow: 0 0 15px #00000050;
-}
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+            padding-bottom: 80px; /* مساحة لشريط التنقل */
+        }
 
-button {
-    background: #38bdf8;
-    border: none;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 5px;
-}
+        /* تأثيرات الخلفية */
+        .glow-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05), transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
 
-input {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-}
-</style>
+        /* الهيدر */
+        header {
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(10, 25, 47, 0.9), transparent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
+        }
+
+        /* الحاويات */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* البطاقات */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الأقسام */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--neon-blue);
+        }
+
+        /* التاريخ */
+        .date-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .date-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .date-val { font-weight: 700; font-size: 1.1rem; }
+        .date-label { font-size: 0.8rem; color: var(--text-dim); }
+
+        /* الأزرار */
+        .btn {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:active { transform: scale(0.95); }
+
+        /* مسبحة */
+        .tasbih-container {
+            text-align: center;
+        }
+
+        .counter-display {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .tasbih-btns {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
+
+        /* شبكة أسماء الله الحسنى */
+        .names-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .name-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* شريط التنقل السفلي */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-item.active {
+            color: var(--neon-blue);
+        }
+
+        .nav-item i { font-size: 1.2rem; }
+
+        /* الأقكار القابلة للطي */
+        .zekr-item {
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 0;
+            cursor: pointer;
+        }
+
+        .zekr-content {
+            display: none;
+            padding: 10px 0;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .zekr-item.open .zekr-content { display: block; }
+
+        /* الحاسبات */
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.2);
+            color: white;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        /* إخفاء الأقسام */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .audio-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+    </style>
 </head>
-
 <body>
 
-<h1>📿 التطبيق الإسلامي المتكامل</h1>
+    <div class="glow-bg"></div>
 
-<div class="card">
-<h3>📅 التاريخ</h3>
-<p id="date"></p>
-<p id="hijri"></p>
-</div>
+    <header>
+        <div class="app-title">✨ نور الهداية</div>
+        <div id="quick-date" style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;"></div>
+    </header>
 
-<div class="card">
-<h3>🤲 ذكر اليوم</h3>
-<p id="zekr"></p>
-<button onclick="changeZekr()">تغيير الذكر</button>
-</div>
+    <div class="container">
+        
+        <div id="home" class="page active">
+            <div class="card date-box">
+                <div class="date-item">
+                    <div class="date-label">التاريخ الهجري</div>
+                    <div id="hijri-date" class="date-val">-- --- ----</div>
+                </div>
+                <div style="width: 1px; height: 40px; background: var(--glass-border);"></div>
+                <div class="date-item">
+                    <div class="date-label">التاريخ الميلادي</div>
+                    <div id="gregorian-date" class="date-val">-- --- ----</div>
+                </div>
+            </div>
 
-<div class="card">
-<h3>🌅 أذكار الصباح والمساء</h3>
-<button onclick="showMorning()">أذكار الصباح</button>
-<button onclick="showEvening()">أذكار المساء</button>
-<p id="azkarBox"></p>
-</div>
+            <div class="card">
+                <div class="section-title">🌟 ذكر اليوم</div>
+                <p id="random-zekr" style="font-size: 1.1rem; min-height: 60px; text-align: center; padding: 10px;">سبحان الله وبحمده، سبحان الله العظيم</p>
+                <button class="btn" onclick="generateZekr()">ذكر آخر</button>
+            </div>
 
-<div class="card">
-<h3>🔢 عداد التسبيح</h3>
-<p id="counter">0</p>
-<button onclick="tasbeeh()">تسبيح</button>
-<button onclick="resetCounter()">إعادة</button>
-</div>
+            <div class="card">
+                <div class="section-title">🤲 دعاء مستجاب</div>
+                <p id="random-doa" style="font-size: 1.1rem; min-height: 60px; text-align: center; padding: 10px;">اللهم إنك عفو كريم تحب العفو فاعفُ عنا</p>
+                <button class="btn" onclick="generateDoa()">دعاء آخر</button>
+            </div>
+        </div>
 
-<div class="card">
-<h3>🎂 حاسبة العمر</h3>
-<input type="date" id="birth">
-<br>
-<button onclick="calcAge()">احسب</button>
-<p id="age"></p>
-</div>
+        <div id="azkar" class="page">
+            <div class="card">
+                <div class="section-title">☀️ أذكار الصباح</div>
+                <div id="morning-azkar-list"></div>
+            </div>
+            <div class="card">
+                <div class="section-title">🌙 أذكار المساء</div>
+                <div id="evening-azkar-list"></div>
+            </div>
+        </div>
 
-<div class="card">
-<h3>🔮 الأبراج</h3>
-<input type="date" id="zodiacDate">
-<br>
-<button onclick="getZodiac()">اعرف برجك</button>
-<p id="zodiac"></p>
-</div>
+        <div id="tasbih" class="page">
+            <div class="card tasbih-container">
+                <div class="section-title">📿 المسبحة الإلكترونية</div>
+                <div id="counter" class="counter-display">0</div>
+                <div class="tasbih-btns">
+                    <button class="btn" onclick="incrementCounter()" style="font-size: 1.5rem;">اضغط</button>
+                    <button class="btn" onclick="resetCounter()" style="background: #e74c3c;">تصفير</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="section-title">🛡️ أسماء الله الحسنى</div>
+                <div class="names-grid" id="names-list"></div>
+            </div>
+        </div>
 
-<script>
-// التاريخ
-const today = new Date();
-document.getElementById("date").innerText =
-    today.toLocaleDateString('ar-EG');
+        <div id="extra" class="page">
+            <div class="card">
+                <div class="section-title">📅 حاسبة العمر</div>
+                <input type="date" id="birthdate">
+                <button class="btn" onclick="calculateAge()">احسب العمر</button>
+                <div id="age-result" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+            </div>
 
-// تحويل هجري (تقريبي)
-function toHijri(date){
-    let days = Math.floor(date / 86400000) + 2440588;
-    let l = days - 1948440 + 10632;
-    let n = Math.floor((l - 1) / 10631);
-    l = l - 10631 * n + 354;
-    let j = (Math.floor((10985 - l) / 5316)) *
-            (Math.floor((50 * l) / 17719)) +
-            (Math.floor(l / 5670)) *
-            (Math.floor((43 * l) / 15238));
-    l = l - (Math.floor((30 - j) / 15)) *
-        (Math.floor((17719 * j) / 50)) -
-        (Math.floor(j / 16)) *
-        (Math.floor((15238 * j) / 43)) + 29;
-    let m = Math.floor((24 * l) / 709);
-    let d = l - Math.floor((709 * m) / 24);
-    let y = 30 * n + j - 30;
+            <div class="card">
+                <div class="section-title">♈ معرفة البرج</div>
+                <p style="font-size: 0.8rem; margin-bottom: 10px;">(للتسلية فقط - يعتمد على تاريخ الميلاد)</p>
+                <button class="btn" onclick="getZodiac()">اكتشف برجك</button>
+                <div id="zodiac-result" style="margin-top: 15px; text-align: center;"></div>
+            </div>
 
-    return d + "/" + m + "/" + y + " هـ";
-}
-document.getElementById("hijri").innerText = toHijri(today);
+            <div class="card">
+                <div class="section-title">📖 قصار السور (صوت)</div>
+                <div id="quran-list">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span>سورة الفاتحة</span>
+                        <button class="audio-btn" onclick="playAudio('https://server11.mp3quran.net/yasser/001.mp3')">▶ تشغيل</button>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span>سورة الإخلاص</span>
+                        <button class="audio-btn" onclick="playAudio('https://server11.mp3quran.net/yasser/112.mp3')">▶ تشغيل</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-// الأذكار
-const azkar = [
-"سبحان الله وبحمده سبحان الله العظيم",
-"لا إله إلا الله وحده لا شريك له",
-"اللهم صل وسلم على نبينا محمد",
-"أستغفر الله العظيم وأتوب إليه"
-];
+        <div id="settings" class="page">
+            <div class="card">
+                <div class="section-title">⚙️ الإعدادات</div>
+                <div style="margin-bottom: 20px;">
+                    <label>تغيير حجم الخط</label>
+                    <input type="range" min="14" max="24" value="16" oninput="changeFontSize(this.value)">
+                </div>
+                <button class="btn" onclick="toggleTheme()" id="theme-btn">الوضع الفاتح ☀️</button>
+            </div>
+        </div>
 
-function changeZekr(){
-    document.getElementById("zekr").innerText =
-    azkar[Math.floor(Math.random() * azkar.length)];
-}
-changeZekr();
+    </div>
 
-// أذكار
-function showMorning(){
-document.getElementById("azkarBox").innerText =
-"أصبحنا وأصبح الملك لله، الحمد لله...";
-}
+    <nav class="nav-bar">
+        <a href="javascript:void(0)" class="nav-item active" onclick="showPage('home', this)">
+            <i>🏠</i><span>الرئيسية</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showPage('azkar', this)">
+            <i>📖</i><span>الأذكار</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showPage('tasbih', this)">
+            <i>📿</i><span>تسبيح</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showPage('extra', this)">
+            <i>✨</i><span>منوعات</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showPage('settings', this)">
+            <i>⚙️</i><span>الإعدادات</span>
+        </a>
+    </nav>
 
-function showEvening(){
-document.getElementById("azkarBox").innerText =
-"أمسينا وأمسى الملك لله، الحمد لله...";
-}
+    <script>
+        // --- 1. إدارة التنقل بين الصفحات ---
+        function showPage(pageId, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            element.classList.add('active');
+            window.scrollTo(0, 0);
+        }
 
-// التسبيح مع حفظ
-let count = localStorage.getItem("count") || 0;
-document.getElementById("counter").innerText = count;
+        // --- 2. التواريخ (ميلادي وهجري) ---
+        function updateDates() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('gregorian-date').innerText = now.toLocaleDateString('ar-EG', options);
+            
+            // حساب هجري مبسط (تقريبي برمجياً)
+            const hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-uma', options).format(now);
+            document.getElementById('hijri-date').innerText = hijri;
+            document.getElementById('quick-date').innerText = hijri;
+        }
 
-function tasbeeh(){
-    count++;
-    localStorage.setItem("count", count);
-    document.getElementById("counter").innerText = count;
-}
+        // --- 3. إدارة الأذكار والأدعية ---
+        const azkarData = [
+            "سبحان الله وبحمده", "سبحان الله العظيم", "لا إله إلا الله", "الله أكبر", "الحمد لله",
+            "أستغفر الله واتوب إليه", "اللهم صلِ وسلم على نبينا محمد", "لا حول ولا قوة إلا بالله",
+            "سبحان الله وبحمده عدد خلقه", "رضيت بالله رباً وبالإسلام ديناً", "يا حي يا قيوم برحمتك أستغيث"
+            // يمكن إضافة المزيد لتصل لـ 50
+        ];
 
-function resetCounter(){
-    count = 0;
-    localStorage.setItem("count", count);
-    document.getElementById("counter").innerText = count;
-}
+        const doasData = [
+            "اللهم آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار",
+            "اللهم إني أسألك الهدى والتقى والعفاف والغنى",
+            "يا مقلب القلوب ثبت قلبي على دينك",
+            "اللهم اغفر لي ولوالدي وللمؤمنين والمؤمنات"
+            // يمكن إضافة المزيد لتصل لـ 100
+        ];
 
-// العمر
-function calcAge(){
-    let birth = new Date(document.getElementById("birth").value);
-    let now = new Date();
+        function generateZekr() {
+            const zekr = azkarData[Math.floor(Math.random() * azkarData.length)];
+            document.getElementById('random-zekr').innerText = zekr;
+        }
 
-    let years = now.getFullYear() - birth.getFullYear();
-    let months = now.getMonth() - birth.getMonth();
-    let days = now.getDate() - birth.getDate();
+        function generateDoa() {
+            const doa = doasData[Math.floor(Math.random() * doasData.length)];
+            document.getElementById('random-doa').innerText = doa;
+        }
 
-    if(days < 0){ months--; days += 30; }
-    if(months < 0){ years--; months += 12; }
+        // --- 4. المسبحة (LocalStorage) ---
+        let count = localStorage.getItem('tasbihCount') || 0;
+        document.getElementById('counter').innerText = count;
 
-    document.getElementById("age").innerText =
-    `عمرك: ${years} سنة و ${months} شهر و ${days} يوم`;
-}
+        function incrementCounter() {
+            count++;
+            document.getElementById('counter').innerText = count;
+            localStorage.setItem('tasbihCount', count);
+            // اهتزاز بسيط للهاتف إذا كان مدعوماً
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
 
-// الأبراج
-function getZodiac() {
-    let d = new Date(document.getElementById("zodiacDate").value);
-    let day = d.getDate();
-    let month = d.getMonth() + 1;
+        function resetCounter() {
+            if(confirm('هل تريد تصفير العداد؟')) {
+                count = 0;
+                document.getElementById('counter').innerText = count;
+                localStorage.setItem('tasbihCount', count);
+            }
+        }
 
-    let zodiac = "";
+        // --- 5. أسماء الله الحسنى ---
+        const names = ["الرحمن", "الرحيم", "الملك", "القدوس", "السلام", "المؤمن", "المبين", "العزيز", "الجبار", "المتكبر", "الخالق", "البارئ", "المصور", "الغفار", "القهار", "الوهاب", "الرزاق", "الفتاح", "العليم", "القابض", "الباسط", "الخافض", "الرافع", "المعز", "المذل", "السميع", "البصير", "الحكم", "العدل", "اللطيف", "الخبير", "الحليم", "العظيم", "الغفور", "الشكور", "العلي", "الكبير", "الحفيظ", "المقيت", "الحسيب", "الجليل", "الكريم", "الرقيب", "المجيب", "الواسع", "الحكيم", "الودود", "المجيد", "الباعث", "الشهيد", "الحق", "الوكيل", "القوي", "المتين", "الولي", "الحميد", "المحصي", "المبدئ", "المعيد", "المحيي", "المميت", "الحي", "القيوم", "الواجد", "الماجد", "الواحد", "الأحد", "الصمد", "القادر", "المقتدر", "المقدم", "المؤخر", "الأول", "الآخر", "الظاهر", "الباطن", "الوالي", "المتعالي", "البر", "التواب", "المنتقم", "العفو", "الرؤوف", "مالك الملك", "ذو الجلال والإكرام", "المقسط", "الجامع", "الغني", "المغني", "المانع", "الضار", "النافع", "النور", "الهادي", "البديع", "الباقي", "الوارث", "الرشيد", "الصبور"];
 
-    if ((month==3 && day>=21) || (month==4 && day<=19)) zodiac="الحمل ♈";
-    else if ((month==4 && day>=20) || (month==5 && day<=20)) zodiac="الثور ♉";
-    else if ((month==5 && day>=21) || (month==6 && day<=20)) zodiac="الجوزاء ♊";
-    else if ((month==6 && day>=21) || (month==7 && day<=22)) zodiac="السرطان ♋";
-    else if ((month==7 && day>=23) || (month==8 && day<=22)) zodiac="الأسد ♌";
-    else if ((month==8 && day>=23) || (month==9 && day<=22)) zodiac="العذراء ♍";
-    else if ((month==9 && day>=23) || (month==10 && day<=22)) zodiac="الميزان ♎";
-    else if ((month==10 && day>=23) || (month==11 && day<=21)) zodiac="العقرب ♏";
-    else if ((month==11 && day>=22) || (month==12 && day<=21)) zodiac="القوس ♐";
-    else if ((month==12 && day>=22) || (month==1 && day<=19)) zodiac="الجدي ♑";
-    else if ((month==1 && day>=20) || (month==2 && day<=18)) zodiac="الدلو ♒";
-    else zodiac="الحوت ♓";
+        function renderNames() {
+            const list = document.getElementById('names-list');
+            names.forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'name-card';
+                div.innerText = name;
+                list.appendChild(div);
+            });
+        }
 
-    document.getElementById("zodiac").innerText = "برجك: " + zodiac;
-}
-</script>
+        // --- 6. حاسبة العمر والبرج ---
+        function calculateAge() {
+            const birth = document.getElementById('birthdate').value;
+            if(!birth) return alert('يرجى اختيار تاريخ');
+            const diff = new Date() - new Date(birth);
+            const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * (365.25/12)));
+            document.getElementById('age-result').innerText = `عمرك الآن: ${years} سنة و ${months} شهر`;
+        }
 
-</body>
-</html>
+        function getZodiac() {
+            const date = new Date(document.getElementById('birthdate').value);
+            if(!date.valueOf()) return alert('يرجى اختيار تاريخ الميلاد أولاً');
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            let zodiac = "";
+            let desc = "";
+
+            if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) { zodiac = "الدلو"; desc = "شخصية مستقلة ومبدعة."; }
+            else if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) { zodiac = "الحوت"; desc = "عاطفي وخيالي."; }
+            else if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) { zodiac = "الحمل"; desc = "شجاع وحيوي."; }
+            else if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) { zodiac = "الثور"; desc = "صبور ومخلص."; }
+            else if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) { zodiac = "الجوزاء"; desc = "ذكي واجتماعي."; }
+            else if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) { zodiac = "السرطان"; desc = "حساس ومحب للعائلة."; }
+            else if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) { zodiac = "الأسد"; desc = "قيادي وواثق."; }
+            else if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) { zodiac = "العذراء"; desc = "دقيق ومنظم."; }
+            else if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) { zodiac = "الميزان"; desc = "دبلوماسي ومحب للسلام."; }
+            else if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) { zodiac = "العقرب"; desc = "قوي وعميق التفكير."; }
+            else if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) { zodiac = "القوس"; desc = "محب للمغامرة والتفاؤل."; }
+            else { zodiac = "الجدي"; desc = "طموح وعملي."; }
+
+            document.getElementById('zodiac-result').innerHTML = `برجك هو: <strong>${zodiac}</strong><br><small>${desc}</small>`;
+        }
+
+        // --- 7. الأذكار القابلة للطي ---
+        function renderAzkarSection(elementId, titleArray) {
+            const parent = document.getElementById(elementId);
+            titleArray.forEach(text => {
+                const item = doc
