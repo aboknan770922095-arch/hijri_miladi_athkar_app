@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تقويم هجري وأذكار</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+    h1 {
+      color: #38bdf8;
+    }
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📿 تطبيق الأذكار</h1>
+
+  <div class="card">
+    <h2>📅 التاريخ</h2>
+    <p id="date"></p>
+  </div>
+
+  <div class="card">
+    <h2>🤲 ذكر اليوم</h2>
+    <p>سبحان الله وبحمده سبحان الله العظيم</p>
+  </div>
+
+  <script>
+    const today = new Date();
+    document.getElementById("date").innerText =
+      today.toLocaleDateString("ar-EG");
+  </script>
+
+</body>
+</html>
